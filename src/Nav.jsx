@@ -16,6 +16,10 @@ function Nav() {
         setActive(location.pathname.replace('/','') ? location.pathname.replace('/','') : 'home')
     },[location])
 
+    document.addEventListener("DOMContentLoaded", function() {
+        var homeButton = document.getElementById("homeButton");
+        homeButton.click();
+    });
 
   return (
     <header>
@@ -25,7 +29,7 @@ function Nav() {
             </div>
             <ul className={`ul ${active}`}>
                 <li onClick={close} className='active'><Link to='/'>00 Home</Link></li> 
-                <li onClick={close} ><Link to='/destination'>01 Destination</Link></li>
+                <li onClick={close} ><Link to='/destination' id='homeButton'>01 Destination</Link></li>
                 <li onClick={close} ><Link to='/crew'>02 Crew</Link></li>
                 <li onClick={close} ><Link to='/technology'>03 Technology</Link></li>
             </ul>

@@ -1,82 +1,74 @@
-import React, { useRef, useState } from 'react'
-import data from './data.js'
+import React, { useRef, useState, useEffect } from 'react';
+import data from './data.js';
+import launchLandscape from './assets/image-launch-vehicle-landscape.jpg';
+import spaceportLandscape from './assets/image-spaceport-landscape.jpg';
+import capsuleLandscape from './assets/image-space-capsule-landscape.jpg';
 
-// import mobilefirsttechnologImage from '../Componants/images/image-launch-vehicle-portrait.jpg'
-// import mobilesecondtechnologImage from '../Componants/images/image-spaceport-portrait.jpg'
-// import mobilethirdtechnologImage from '../Componants/images/image-space-capsule-portrait.jpg'
+import launchPortrait from './assets/image-launch-vehicle-portrait.jpg';
+import spaceportPortrait from './assets/image-spaceport-portrait.jpg';
+import capsulePortrait from './assets/image-space-capsule-portrait.jpg';
+
+const landscapeImages = [launchLandscape, spaceportLandscape, capsuleLandscape];
+const portraitImages = [launchPortrait, spaceportPortrait, capsulePortrait];
 
 function Technology() {
+  const [technologyIndex, setTechnologyIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1200);
 
-  const [technologyIndex, setTechnologyIndex] = useState(0)
-  const [mobile, setMobiel] = useState(() => {
-    if(window.innerWidth < 1200) {
-      return true
-    } else {
-      return false
-    } 
-  })
-
-  // let DesctoptechnologyImages = [
-  //   mobilefirsttechnologImage,
-  //   mobilesecondtechnologImage,
-  //   mobilethirdtechnologImage
-  // ]
-
-  let technologyNavigation = useRef()
-  let image = React.useRef()
+  const technologyNavigation = useRef();
+  const image = useRef();
 
   function changeTab(e) {
-    setTechnologyIndex(e.target.dataset.index)
-    let children = technologyNavigation.current.children
+    const index = parseInt(e.target.dataset.index, 10);
+    setTechnologyIndex(index);
+    const children = technologyNavigation.current.children;
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      child.classList.remove('active')
+      child.classList.remove('active');
     }
-    e.target.classList.add('active')
+    e.target.classList.add('active');
   }
 
-  React.useEffect(() => {
-    window.addEventListener('resize', () => {
-      if(window.innerWidth < 1200) {
-        setMobiel(true)
-      } else {
-        setMobiel(false)
-      }
-    })
-  })
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 1200);
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className='technology-section'>
       <div className="technology-subtitle">
         <span>03 </span>space launch 101
       </div>
-      {
-        <>
+      <>
         <div ref={image} className="technology-img">
-        {/* <img src={data.technology[technologyIndex].images.landscape} alt="" /> */}
-        <img src={mobile === false? data.technology[technologyIndex].images.portrait : data.technology[technologyIndex].images.landscape} alt="" />
-      </div>
-      <div ref={technologyNavigation} className="technology-navigation">
-        <div data-index={0} onClick={changeTab} className="technology-tab active">1</div>
-        <div data-index={1} onClick={changeTab} className="technology-tab">2</div>
-        <div data-index={2} onClick={changeTab} className="technology-tab">3</div>
-
-      </div>
+          <img
+            src={isMobile ? landscapeImages[technologyIndex] : portraitImages[technologyIndex]}
+            alt={data.technology[technologyIndex].name}
+          />
+        </div>
+        <div ref={technologyNavigation} className="technology-navigation">
+          <div data-index={0} onClick={changeTab} className="technology-tab active">1</div>
+          <div data-index={1} onClick={changeTab} className="technology-tab">2</div>
+          <div data-index={2} onClick={changeTab} className="technology-tab">3</div>
+        </div>
         <div className="technology-content">
           <div className="technology-content-subtitle">
-            the technology...
+            The technology...
           </div>
-          <div className="technology-content-subtitle">
+          <div className="technology-content-title">
             {data.technology[technologyIndex].name}
           </div>
           <div className="technology-content-body">
             {data.technology[technologyIndex].description}
           </div>
         </div>
-    </>
-      }
+      </>
     </div>
-  )
+  );
 }
 
-export default Technology
+export default Technology;
